@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <locale.h>
 #include <string.h>
-
+//Struct dos Dados da Ocorrência
 typedef struct{
 char Tipo[50];
 char Data[20];
@@ -15,7 +15,7 @@ printf("Digite o Numero da Ocorrencia:\n");
 printf("1-Furto\n2-Roubo\n3-Homicidio\n4-Feminicidio\n5-Acidente\n6-Desaparecimento\n7-Nao criminal\n");
 scanf("%d", &opcao);
 getchar();
-
+//Switch dos Tipos de Ocorrência do Sistema
 switch(opcao) {
 
 	case 1:
@@ -49,7 +49,7 @@ switch(opcao) {
 	default:
 		printf(O->Tipo,"Invalido\n");
 }
-
+	
 printf("Digite a Data do Ocorrido:\n");
 	fgets(O->Data, 30, stdin);
 	
