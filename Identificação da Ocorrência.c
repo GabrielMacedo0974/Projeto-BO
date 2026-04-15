@@ -47,7 +47,7 @@ switch(opcao) {
 	break;
 	
 	default:
-		printf(O->Tipo,"Invalido\n");
+		strcpy(O->Tipo,"Invalido\n");
 }
 	
 printf("Digite a Data do Ocorrido:\n");
