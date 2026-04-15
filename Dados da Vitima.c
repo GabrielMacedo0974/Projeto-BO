@@ -4,30 +4,30 @@
 // struct com os dados
 typedef struct {
 char nome[70];
-char cpf[11];
+char cpf[16];
 char contato[15];
 char residencia[50];
 } Pessoa;
 
 // função para cadastrar
-void cadastrarPessoa(pessoa *P){
+void cadastrarPessoa(Pessoa *P){
 printf("=== Cadastro de usuario ===\n");
 
 printf("nome: ");
 fgets(P->nome, sizeof(P->nome),stdin);
-p->nome[strcspn(p->nome,"\n")] = '\0';
+P->nome[strcspn(P->nome,"\n")] = '\0';
 
  printf("CPF ");
 fgets(P->cpf, sizeof(P->cpf),stdin);
-p->cpf[strcspn(p->cpf,"\n")] = '\0';
+P->cpf[strcspn(P->cpf,"\n")] = '\0';
 
  printf("contato: ");
 fgets(P->contato, sizeof(P->contato),stdin);
-p->contato[strcspn(p->contato,"\n")] = '\0';
+P->contato[strcspn(P->contato,"\n")] = '\0';
 
  printf("residencia: ");
 fgets(P->residencia, sizeof(P->residencia),stdin);
-p->residencia[strcspn(p->residencia,"\n")] = '\0';
+P->residencia[strcspn(P->residencia,"\n")] = '\0';
 }
 
 // função para mostrar dados
@@ -43,7 +43,7 @@ int main () {
 Pessoa pessoa;
 
 cadastrarPessoa(&pessoa);
-mostarPessoa(pessoa);
+mostrarPessoa(pessoa);
 
 return 0;
 }
