@@ -16,6 +16,7 @@ void pausar(){
 
 //===Struct dos Dados do Boletim de Ocorrencia===
 typedef struct{
+int id;
 char Cpf[16];
 char Tipo[50];
 char Data[20];
@@ -41,7 +42,7 @@ int buscarPessoaPorCpf(Pessoa pessoas[], int total, char cpf[]){
 	return -1;
 }
 
-// ===FunÁ„o para Cadastrar a Vitima===
+// ===Fun√ß√£o para Cadastrar a Vitima===
 void cadastrarPessoa(Pessoa *P){
 printf("=== Cadastro de usuario ===\n");
 
@@ -63,16 +64,17 @@ P->residencia[strcspn(P->residencia,"\n")] = '\0';
 }
 
 //===Void de Cadastrar Ocorrencias===
-int cadastrarOcorrencia(Ocorrencia *O, Pessoa pessoa[], int totalPessoas){
-
-printf("digite o CPF da pessoa envolvida");
+int cadastrarOcorrencia(Ocorrencia *O, Pessoa pessoa[], int totalPessoas, int proximoID){
+	
+O->id = proximoID;
+printf("digite o CPF da pessoa envolvida: ");
 fgets(O->Cpf, sizeof(O->Cpf), stdin);
 O->Cpf[strcspn(O->Cpf,"\n")] = '\0';
 
 int pos = buscarPessoaPorCpf(pessoa,totalPessoas, O->Cpf);
 
 if(pos == -1){
-	printf("Pessoa n„o encontrada! Por favor realize o cadastro primeiro.\n");
+	printf("Pessoa n√£o encontrada! Por favor realize o cadastro primeiro.\n");
 	return 0;
 }
 	printf("Pessoa encontrada: %s\n", pessoa[pos]. nome);
@@ -137,19 +139,20 @@ void mostrarOcorrencia(Ocorrencia O, Pessoa pessoas [], int totalPessoas){
 int pos = buscarPessoaPorCpf(pessoas,totalPessoas,O.Cpf);
 
 printf("\n--- OCORRENCIA ---\n");
+printf("ID: %d\n", O.id);
 printf("CPF: %s\n", O.Cpf);
 
 if(pos != -1)
 	printf("Pessoa: %s\n", pessoas[pos].nome);
 
-printf("\n---Dados Adicionados AtÈ Agora---\n");
+printf("\n---Dados Adicionados At√© Agora---\n");
 printf("Tipo: %s\n", O.Tipo);
 printf("Data: %s\n", O.Data);
 printf("Hora: %s\n", O.Hora);
 printf("Local: %s\n",O.Local);
 }
 
-// funÁ„o para mostrar dados
+// fun√ß√£o para mostrar dados
 void mostrarPessoa(Pessoa P) {
 printf("\n=== Dados Cadastrados ===\n");
 printf("Nome :%s\n", P.nome);
@@ -206,6 +209,46 @@ int carregarOcorrencias(Ocorrencia ocorrencias[]){
 	return total;
 }
 
+//Int do ID da Ocorrencia
+int gerarProximoID(Ocorrencia ocorrencias[], int total){
+	if(total == 0)
+		return 1;
+	else
+		return ocorrencias[total-1].id + 1; 
+}
+
+//Void Deletar Ocorrencia
+void removerOcorrencia(Ocorrencia ocorrencias[], int *total){
+	int id;
+	printf("Digite o ID da Ocorrencia que Deseja Remover: ");
+	scanf("%d",&id);
+	while(getchar()!='\n');
+	
+	int encontrado = -1;
+	
+	for(int i=0;i<*total;i++){
+		if(ocorrencias[i].id == id){
+			encontrado = i;
+			break;
+		}
+	}
+	
+	if(encontrado == -1){
+		printf("Ocorrencia n√£o encontrada\n");
+		return;
+	}
+	
+	for(int i=encontrado;i< *total - 1;i++){
+		ocorrencias[i] = ocorrencias[i+1];
+	}
+	(*total)--;
+	
+	salvarOcorrencias(ocorrencias,*total);
+	
+	printf("Ocorrencia removida com sucesso\n");
+}
+
+
 int main () {
 setlocale(LC_ALL,"portuguese");
 
@@ -225,6 +268,7 @@ do{
 	printf("2 - Cadastrar Ocorrencia\n");
 	printf("3 - Listar Pessoas\n");
 	printf("4 - Listar Ocorrencias\n");
+	printf("5 - Remover Ocorrencia\n");
 	printf("0 - Sair\n");
 	printf("Escolha: ");
 	scanf("%d",&opcao);
@@ -248,10 +292,16 @@ do{
 	case 2:
 		limparTela();
 		if(totalOcorrencias < MAX){
-			cadastrarOcorrencia(&ocorrencias[totalOcorrencias], pessoas, totalPessoas);
+			
+			int novoID = gerarProximoID(ocorrencias, totalOcorrencias);
+			
+			if (cadastrarOcorrencia(&ocorrencias[totalOcorrencias], pessoas, totalPessoas, novoID)){
+			
 			totalOcorrencias++;
 			salvarOcorrencias(ocorrencias,totalOcorrencias);
 			printf("Ocorrencia Salva Com Sucesso!\n");
+			printf("\nCodigo do Boletim: %d\n", novoID);
+		}
 		}else{
 			printf("Limite de Ocorrencias Cadastradas Atingido!\n");
 		}
@@ -277,6 +327,17 @@ do{
 		}
 	pausar();
 	break;
+	
+	case 5:
+		limparTela();
+		if(totalOcorrencias == 0){
+			printf("Nao existem ocorrencias cadastradas.\n");
+			}else{
+				removerOcorrencia(ocorrencias, &totalOcorrencias);
+			}
+			pausar();
+			break;
+		
 	case 0:
 		printf("Encerrando Sistema...\n");
 		break;
