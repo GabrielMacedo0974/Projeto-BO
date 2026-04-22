@@ -23,7 +23,7 @@
  //Descricao detalhada do suspeito
  typedef struct{
  	float altura_aprox;
- 	char cor_pele[30];//informar a cor,textura e alterações de pigmentação da pele
+ 	char cor_pele[30];//informar a cor,textura e alteracoes de pigmentacao da pele
  	char cor_olhos[30];//cor,formato
  	char cabelo[50]; //cor,corte,tipo:cacheado,ondulado,liso,careca
  	char porte_fisico[50];//magro,atletico,obeso
@@ -87,15 +87,15 @@ typedef struct{
 	Informacao_da_fuga fuga;
 	Dados_do_veiculo veiculo;  
 	Dinamica_do_envolvimento dinamica_do_envolvimento;  
-  }Registro_do_suspeito;
+  }Registro_do_suspeito ;
 
   //Vetor global 
   Registro_do_suspeito registros[100];
 
-  //Variável para controlar quantos registros já foram preenchidos
+  //Variavel para controlar quantos registros ja foram preenchidos
   int contador_registro = 0;
 
-  //==========Funções Auxiliares===============
+  //==========FunÃƒÂ§ÃƒÂµes Auxiliares===============
 
  void limpartela() {
    #ifdef _WIN32
@@ -120,22 +120,6 @@ typedef struct{
     printf("Dados do Suspeito inicializado com sucesso!\n");
  }
 
- void listarTodosSuspeitos(){
-	printf("\n===== RELATÓRIO DE SUSPEITOS CADASTRADOS =====\n");
-
-	if(contador_registro == 0) {
-		printf("Nenhum registro encontrado.\n");
-		return;
-	}
-
-	for (int i = 0; i< contador_registro; i++){
-		printf("\n----------Ficha do Suspeito ID: %03d----------\n", registros[i]. identificacao.Id_do_suspeito);
-		printf("NOME:          %s\n", registros[i].identificacao.nome);
-		printf("CPF:           %s\n", registros[i]. identificacao.CPF);
-		printf("-------------------------------------------------\n");
-	}
-}
-
  void registrarSuspeito(){
 	if (contador_registro >= 100){
 		printf("Limite de registros atingido!\n");
@@ -143,9 +127,9 @@ typedef struct{
 	}
 
 	Registro_do_suspeito s;
-    char possui_info;//Variável para controlar se tudo será opcional
+    char possui_info;//Variavel para controlar se tudo serao opcional
 
-	//Id automático
+	//Id automÃƒÂ¡tico
 	s.identificacao.Id_do_suspeito = contador_registro +1 ;
 
 	printf("\n-----CADASTRO (Id:%d)-----\n", s.identificacao.Id_do_suspeito);
@@ -185,6 +169,7 @@ typedef struct{
 	printf("\nDigite o sexo (M/F):");
 	fgets(s.identificacao.sexo, 2 , stdin );
 	s.identificacao.CPF[strcspn(s.identificacao.CPF, "\n")] = 0;
+	while(getchar()!= '\n');
 
 	printf("\nDigite a naturalidade:");
 	fgets(s.identificacao.naturalidade, 50, stdin );
@@ -236,7 +221,7 @@ typedef struct{
 	fgets(s.caracteristicas.cor_olhos, 30 , stdin );
 	s.caracteristicas.cor_olhos[strcspn(s.caracteristicas.cor_olhos, "\n")] = 0;
 
-    //========Localização e contato===========
+    //========LocalizaÃƒÂ§ÃƒÂ£o e contato===========
 
 	printf("\nInfome o numero do telefone/celular:");
 	fgets(s.localizacao.telefone_celular, 20 , stdin );
@@ -300,7 +285,7 @@ typedef struct{
 		strcpy(s.fuga.ultima_visualizacao, "acao capturada");
 	}
 
-	//-------Dados sobre o veículo----------
+	//-------Dados sobre o veÃƒÂ­culo----------
 
     char tem_veiculo;
 	printf("\nHouve algum veiculo envolvido? == (S/N):");
@@ -371,7 +356,7 @@ typedef struct{
 		strcpy(s.veiculo.caracteristicas_especificas, "Nenhuma");
 	}
 
-	//------Dinâmica do envolvimento-------
+	//------DinÃƒÂ¢mica do envolvimento-------
 
 	printf("\nInforme a relacao com a vitima:");
 	fgets(s.dinamica_do_envolvimento.relacao_com_a_vitima, 50 , stdin );
@@ -397,29 +382,114 @@ typedef struct{
 	{
 		printf("\n[AVISO]: Prosseguindo sem dados detalhados do suspeito.\n");
 
-		//Preenchimento padrão para evitar erros no relatório final
-		strcpy(s.identificacao.nome,"Não identificado");
+		//Preenchimento padrÃƒÂ£o para evitar erros no relatÃƒÂ³rio final
+		strcpy(s.identificacao.nome,"Nao identificado");
 		s.identificacao.idade_aprox = 0;
 		strcpy(s.fuga.modo_de_evasao, "N/A");
 	}
  registros[contador_registro] = s;
  contador_registro++;
  printf("\n>>> Suspeito registrado com sucesso!<<<\n");
- pausar();//para o usuário conseguir ler a mensagem
+ pausar();//para o usuario conseguir ler a mensagem
  }
 
- 
+void consultarsuspeito(){
+	char busca[100];
+	int achou = 0;
+	limpartela();
 
+	printf("\n==========Cunsultar Suspeito=========\n");
+	printf("Digite o nome completo para busca:");
+	fgets(busca,100,stdin);
+	busca[strcspn(busca, "\n")] = 0;
 
+	for (int i = 0; i<contador_registro; i++){
+        if(strcmp(registros[i].identificacao.nome,busca)== 0)
+        {
+            printf("\n[Registro Encontrado]\n");
+            printf("Id:%d\n", registros[i].identificacao.Id_do_suspeito);
+            printf("CPF: %s\n", registros[i].identificacao.CPF);
+            printf("Alcunha: %s\n", registros[i].identificacao.alcunha_vulgo);
 
+            achou = 1;
+            break;
+        }
+		
+	}
+    if (!achou) 
+    printf("\nSuspeito nao localizado no sistema.\n");
+   
 
+ }
 
+ void ListarTodosSuspeito(){
+    limpartela();
+	printf("\n===== RELATORIO DE SUSPEITOS CADASTRADOS =====\n");
+
+	if(contador_registro == 0) {
+		printf("Nenhum registro encontrado.\n");
+        pausar();
+		return;
+	}
+
+	for (int i = 0; i< contador_registro; i++){
+		printf("\n==========Ficha do Suspeito ID: %03d==========\n", registros[i]. identificacao.Id_do_suspeito);
+		printf("NOME:          %s\n", registros[i].identificacao.nome);
+        printf("Alcunha/vulgo:               %s\n", registros[i].identificacao.alcunha_vulgo);
+		printf("CPF:           %s\n", registros[i]. identificacao.CPF);
+		printf("=================================================\n");
+	}
+   
+}
+
+void atualizardados(){
+    int id_busca;
+    int achou = 0;
+    limpartela();
+
+    printf("==========Atualizar Dados==========\n");
+    printf("Digite o ID do suspeito:");
+    if (scanf("%d", &id_busca) !=1){
+        while(getchar() !='\n');
+        return;
+    }
+    getchar();
+
+    for(int i = 0; i < contador_registro; i++){
+        if (registros[i].identificacao.Id_do_suspeito == id_busca){
+            printf("Nome atual: %s\n", registros[i].identificacao.nome);
+            printf("Digite o novo nome:");
+
+            fgets(registros[i].identificacao.nome,100,stdin);
+
+            registros[i].identificacao.nome[strcspn(registros[i].identificacao.nome,"\n")] = 0;
+
+            printf("\n\033[1;32mSuscesso:Nome atualizado!\033[0m\n");
+            achou = 1;
+            break;
+        }
+    }
+    if(!achou) 
+    printf("\nId invalido.\n");
+  
+
+}
+
+void vincularSuspeitoOcorrencia(){
+    int id_sus;
+    limpartela();
+
+    printf("==========Vincular Suspeito a Ocorrencia==========\n");
+    printf("Informe o ID do Suspeito:");
+    scanf("%d", &id_sus);
+    getchar();
+
+    printf("\n\033[1;32mSucesso: Suspeito ID %d vinculado ao Boletim!\033[0m\n", id_sus);
+   
+}
 
   int main() {
-     int opcao;
-    
-
-    if  (!telamenu()) return 0; 
+     int opcao = 0;
 
 	do{
 		limpartela();
@@ -429,9 +499,11 @@ typedef struct{
 		printf("3. Listar todos os suspeitos\n");
 		printf("4. Atualizar Dados\n");
 		printf("5. Vincular Suspeito a Ocorrencia\n");
-		printf("0. Sair\n");
+		printf("0. Sair\n\n");
 		scanf("%d", &opcao);
 		getchar();
+	
+		
 
 		switch(opcao) {
 			case 1: registrarSuspeito(); break;
@@ -439,24 +511,9 @@ typedef struct{
 			case 3: ListarTodosSuspeito(); break;
 			case 4: atualizardados(); break;
 			case 5: vincularSuspeitoOcorrencia(); break;
-			case 0: 
-
-
-
-
 		}
-
-
-
-
-
-
-	}while (opcao !=0);//Repetição do menu
+		pausar();
+	}while (opcao !=0);//Repeticao do menu
 	
-	
-
-
-
-
-
+  return 0;
   }
